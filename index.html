@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Торгскан — AI-аналитика для селлеров WB и Ozon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #13131a;
+            --bg-card-hover: #1a1a24;
+            --text: #e4e4e7;
+            --text-muted: #8b8b9e;
+            --accent-start: #4f6ef7;
+            --accent-end: #9b4ff7;
+            --gradient: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+            --border: #1e1e2a;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.15rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--text); }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .burger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .burger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .burger.active span:nth-child(2) { opacity: 0; }
+        .burger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* SECTIONS */
+        section {
+            padding: 100px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .section-title span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 64px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(79, 110, 247, 0.12) 0%, transparent 70%);
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            max-width: 720px;
+        }
+
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 560px;
+            margin: 0 auto 40px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 36px;
+            background: var(--gradient);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(79, 110, 247, 0.35);
+        }
+
+        .hero-sub {
+            display: block;
+            margin-top: 14px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* PAIN CARDS */
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .pain-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            position: relative;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .pain-card::before {
+            content: '—';
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pain-card:hover {
+            border-color: rgba(79, 110, 247, 0.3);
+            background: var(--bg-card-hover);
+        }
+
+        /* SOLUTION CARDS */
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .solution-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 28px;
+            transition: border-color 0.3s, transform 0.3s, background 0.3s;
+        }
+
+        .solution-card:hover {
+            border-color: rgba(155, 79, 247, 0.3);
+            transform: translateY(-4px);
+            background: var(--bg-card-hover);
+        }
+
+        .solution-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .solution-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .solution-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* STEPS */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: var(--gradient);
+            opacity: 0.3;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-num {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 0 auto 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* SCREENSHOTS */
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .screenshot-mock {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            aspect-ratio: 9 / 16;
+            max-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .screenshot-mock::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .screenshot-mock::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* PRICING */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .price-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 36px 28px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .price-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .price-card.popular {
+            border-color: rgba(79, 110, 247, 0.5);
+            background: linear-gradient(180deg, rgba(79, 110, 247, 0.06) 0%, var(--bg-card) 100%);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 5px 18px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .price-turnover {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .price-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .price-amount span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .price-setup {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .price-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 28px;
+        }
+
+        .price-features li {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            padding: 6px 0;
+            padding-left: 22px;
+            position: relative;
+        }
+
+        .price-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-start);
+            font-weight: 700;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            padding: 12px 28px;
+            border: 1px solid var(--border);
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-start);
+            background: rgba(79, 110, 247, 0.06);
+        }
+
+        .pricing-note {
+            text-align: center;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* SERVICES */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .service-card:hover {
+            border-color: rgba(79, 110, 247, 0.3);
+            background: var(--bg-card-hover);
+        }
+
+        .service-card span:first-child {
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .service-price {
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
+        }
+
+        /* ABOUT */
+        .about-wrap {
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* PLACEHOLDER: Фото — заменить src на реальное фото */
+        .about-photo {
+            width: 160px;
+            height: 160px;
+            min-width: 160px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .about-text {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* FAQ */
+        .faq-list {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1rem;
+            font-weight: 500;
+            text-align: left;
+            padding: 20px 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: inherit;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease, padding 0.35s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            padding-bottom: 20px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 80px 0 40px;
+            text-align: center;
+        }
+
+        footer .btn {
+            font-size: 1.1rem;
+            padding: 18px 48px;
+        }
+
+        .footer-email {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* PLACEHOLDER: Заменить email на реальный -->  */
+        .footer-email a {
+            color: var(--text-muted);
+            text-decoration: underline;
+        }
+
+        .footer-copy {
+            margin-top: 60px;
+            font-size: 0.8rem;
+            color: rgba(139, 139, 158, 0.5);
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: rgba(10, 10, 15, 0.97);
+                flex-direction: column;
+                align-items: center;
+                gap: 0;
+                padding: 20px 0;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-links.open { display: flex; }
+
+            .nav-links li { width: 100%; text-align: center; }
+
+            .nav-links a {
+                display: block;
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+
+            .burger { display: flex; }
+
+            section { padding: 60px 0; }
+
+            .section-title { font-size: 1.6rem; margin-bottom: 36px; }
+
+            .solution-grid { grid-template-columns: 1fr; }
+
+            .steps {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .steps::before { display: none; }
+
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+                max-width: 280px;
+                margin: 0 auto;
+            }
+
+            .pricing-grid { grid-template-columns: 1fr; }
+
+            .about-wrap {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .services-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <div class="container">
+        <div class="nav-logo">Торгскан</div>
+        <button class="burger" id="burger" aria-label="Меню">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#solution">Решение</a></li>
+            <li><a href="#pricing">Тарифы</a></li>
+            <li><a href="#services">Услуги</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Контакт</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero visible">
+    <div class="container">
+        <h1><span>Торгскан</span> — AI-аналитика для селлеров WB и Ozon</h1>
+        <p>Сканирует ваши кабинеты каждый день. Дашборды, алерты, P&L — всё в Telegram. Без ручного сбора данных.</p>
+        <!-- PLACEHOLDER: Заменить href на реальную ссылку Telegram -->
+        <a href="#telegram" class="btn">Включить сканер</a>
+        <span class="hero-sub">Бесплатная демо-сессия 15 минут</span>
+    </div>
+</section>
+
+<!-- PAIN -->
+<section id="pain">
+    <div class="container">
+        <h2 class="section-title">Слепая <span>зона</span></h2>
+        <div class="pain-grid">
+            <div class="pain-card">Утро начинается с 30 минут в личных кабинетах WB и Ozon</div>
+            <div class="pain-card">Стокауты обнаруживаете, когда продажи уже упали</div>
+            <div class="pain-card">ДРР рекламы растёт, а вы узнаёте об этом в конце месяца</div>
+            <div class="pain-card">План продаж — в голове, факт — непонятно где</div>
+        </div>
+    </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+    <div class="container">
+        <h2 class="section-title">Что <span>сканирует</span> Торгскан</h2>
+        <div class="solution-grid">
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F4CA;</span>
+                <h3>Утренний дашборд</h3>
+                <p>Ключевые метрики каждое утро в 9:00 в Telegram</p>
+            </div>
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F50D;</span>
+                <h3>Deep Scan</h3>
+                <p>Автоматический поиск проблем: стокауты, сливы рекламы, просадки</p>
+            </div>
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F4C8;</span>
+                <h3>План / факт</h3>
+                <p>Темп выполнения плана в реальном времени</p>
+            </div>
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F4B0;</span>
+                <h3>P&L трекинг</h3>
+                <p>Прибыль по товарам с учётом всех комиссий и логистики</p>
+            </div>
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F4E6;</span>
+                <h3>Контроль остатков</h3>
+                <p>Предупреждение о стокаутах до того, как они случатся</p>
+            </div>
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F3AF;</span>
+                <h3>Мониторинг рекламы</h3>
+                <p>ДРР, ROI, расходы по кампаниям</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+    <div class="container">
+        <h2 class="section-title">Как это <span>работает</span></h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h3>Подключение</h3>
+                <p>Даёте API-ключи кабинетов. 30 минут.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h3>Настройка</h3>
+                <p>Настраиваем систему под ваши товары и цели. 1-2 дня.</p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h3>Результат</h3>
+                <p>Получаете дашборды и алерты каждый день в Telegram.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section id="screenshots">
+    <div class="container">
+        <h2 class="section-title">Как это <span>выглядит</span></h2>
+        <div class="screenshots-grid">
+            <!-- PLACEHOLDER: Заменить на реальный скриншот утреннего дашборда -->
+            <div class="screenshot-mock">Утренний дашборд</div>
+            <!-- PLACEHOLDER: Заменить на реальный скриншот Deep Scan алерта -->
+            <div class="screenshot-mock">Deep Scan алерт</div>
+            <!-- PLACEHOLDER: Заменить на реальный скриншот недельного итога -->
+            <div class="screenshot-mock">Недельный итог</div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+    <div class="container">
+        <h2 class="section-title">Зона <span>покрытия</span></h2>
+        <div class="pricing-grid">
+            <div class="price-card">
+                <h3>Старт</h3>
+                <div class="price-turnover">до 1 млн &#8381; оборот</div>
+                <div class="price-amount">от 5к&#8381; <span>/мес</span></div>
+                <div class="price-setup">Подключение: 15 000 &#8381;</div>
+                <ul class="price-features">
+                    <li>Утренний дашборд</li>
+                    <li>Контроль остатков</li>
+                    <li>План / факт</li>
+                    <li>Базовая аналитика</li>
+                </ul>
+                <!-- PLACEHOLDER: Заменить href на Telegram-ссылку -->
+                <a href="#telegram" class="btn-outline">Выбрать</a>
+            </div>
+            <div class="price-card popular">
+                <div class="price-badge">Популярный</div>
+                <h3>Бизнес</h3>
+                <div class="price-turnover">1–10 млн &#8381; оборот</div>
+                <div class="price-amount">от 15к&#8381; <span>/мес</span></div>
+                <div class="price-setup">Подключение: 25 000 &#8381;</div>
+                <ul class="price-features">
+                    <li>Всё из тарифа Старт</li>
+                    <li>Deep Scan</li>
+                    <li>P&L трекинг</li>
+                    <li>Рекламная аналитика</li>
+                    <li>Полная система</li>
+                </ul>
+                <!-- PLACEHOLDER: Заменить href на Telegram-ссылку -->
+                <a href="#telegram" class="btn">Выбрать</a>
+            </div>
+            <div class="price-card">
+                <h3>Про</h3>
+                <div class="price-turnover">10 млн+ &#8381; оборот</div>
+                <div class="price-amount">от 30к&#8381; <span>/мес</span></div>
+                <div class="price-setup">Подключение: 40 000 &#8381;</div>
+                <ul class="price-features">
+                    <li>Всё из тарифа Бизнес</li>
+                    <li>Приоритетная поддержка</li>
+                    <li>Кастомные отчёты</li>
+                    <li>Индивидуальные доработки</li>
+                </ul>
+                <!-- PLACEHOLDER: Заменить href на Telegram-ссылку -->
+                <a href="#telegram" class="btn-outline">Выбрать</a>
+            </div>
+        </div>
+        <p class="pricing-note">Дешевле штатного аналитика. Сканирует 24/7 без выходных.</p>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+    <div class="container">
+        <h2 class="section-title">Дополнительные <span>услуги</span></h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <span>Автозаполнение Google-таблиц</span>
+                <span class="service-price">от 10 000 &#8381;</span>
+            </div>
+            <div class="service-card">
+                <span>Синхронизация FBS-остатков</span>
+                <span class="service-price">от 15 000 &#8381;</span>
+            </div>
+            <div class="service-card">
+                <span>Telegram-боты для бизнеса</span>
+                <span class="service-price">от 15 000 &#8381;</span>
+            </div>
+            <div class="service-card">
+                <span>Лендинги и сайты</span>
+                <span class="service-price">от 10 000 &#8381;</span>
+            </div>
+            <div class="service-card">
+                <span>Парсинг и сбор данных</span>
+                <span class="service-price">от 10 000 &#8381;</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+    <div class="container">
+        <h2 class="section-title">Кто за <span>сканером</span></h2>
+        <div class="about-wrap">
+            <!-- PLACEHOLDER: Заменить на реальное фото (тег <img>) -->
+            <div class="about-photo">Фото</div>
+            <p class="about-text">Управляю продажами на 6 кабинетах Wildberries и Ozon. Всю аналитику, которую продаю — использую сам каждый день. Не теоретик, а практик, который построил систему под реальные задачи.</p>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+    <div class="container">
+        <h2 class="section-title">Частые <span>вопросы</span></h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question">Какие данные вам нужны для подключения?</button>
+                <div class="faq-answer"><p>API-ключи кабинетов WB и/или Ozon. Мы помогаем их получить.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Это безопасно?</button>
+                <div class="faq-answer"><p>API-ключи дают доступ только к статистике, не к управлению. Данные хранятся на защищённом сервере.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Сколько времени занимает подключение?</button>
+                <div class="faq-answer"><p>От 30 минут до 2 дней, в зависимости от количества кабинетов и настроек.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Можно попробовать перед оплатой?</button>
+                <div class="faq-answer"><p>Да, первые 7 дней — бесплатный тестовый период.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Работаете только с WB и Ozon?</button>
+                <div class="faq-answer"><p>Основной фокус — WB и Ozon, но также делаю Telegram-ботов, автоматизацию таблиц и другие решения.</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+    <div class="container">
+        <!-- PLACEHOLDER: Заменить href на реальную ссылку Telegram (https://t.me/username) -->
+        <a href="#telegram" class="btn">Включить сканер</a>
+        <!-- PLACEHOLDER: Заменить email на реальный -->
+        <p class="footer-email">Или напишите на email: <a href="mailto:placeholder@email.com">placeholder@email.com</a></p>
+        <p class="footer-copy">&copy; 2026 Торгскан. Все права защищены.</p>
+    </div>
+</footer>
+
+<script>
+    // Burger menu
+    const burger = document.getElementById('burger');
+    const navLinks = document.getElementById('navLinks');
+
+    burger.addEventListener('click', () => {
+        burger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            burger.classList.remove('active');
+            navLinks.classList.remove('open');
+        });
+    });
+
+    // IntersectionObserver for scroll animations
+    const sections = document.querySelectorAll('section:not(.hero)');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    sections.forEach(s => observer.observe(s));
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            const wasActive = item.classList.contains('active');
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            if (!wasActive) item.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>
