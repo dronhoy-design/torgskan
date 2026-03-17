@@ -354,7 +354,7 @@
             overflow: hidden;
         }
 
-        .screenshot-mock::before {
+        .screenshot-mock:empty::before {
             content: '';
             position: absolute;
             top: 0;
@@ -366,7 +366,7 @@
             border-radius: var(--radius) var(--radius) 0 0;
         }
 
-        .screenshot-mock::after {
+        .screenshot-mock:empty::after {
             content: '';
             position: absolute;
             top: 10px;
@@ -730,11 +730,11 @@
 <!-- HERO -->
 <section class="hero visible">
     <div class="container">
-        <h1><span>Торгскан</span> — AI-аналитика для селлеров WB и Ozon</h1>
-        <p>Сканирует ваши кабинеты каждый день. Дашборды, алерты, P&L — всё в Telegram. Без ручного сбора данных.</p>
+        <h1><span>Торгскан</span> — AI-ко-пилот для селлеров WB и Ozon</h1>
+        <p>Сканирует ваши кабинеты каждый день. Находит проблемы, считает прибыль, говорит что делать — прямо в Telegram.</p>
         <!-- PLACEHOLDER: Заменить href на реальную ссылку Telegram -->
-        <a href="#telegram" class="btn">Включить сканер</a>
-        <span class="hero-sub">Бесплатная демо-сессия 15 минут</span>
+        <a href="#telegram" class="btn">Бесплатный аудит кабинета</a>
+        <span class="hero-sub">Покажем проблемы в ваших кабинетах за 15 минут</span>
     </div>
 </section>
 
@@ -747,6 +747,31 @@
             <div class="pain-card">Стокауты обнаруживаете, когда продажи уже упали</div>
             <div class="pain-card">ДРР рекламы растёт, а вы узнаёте об этом в конце месяца</div>
             <div class="pain-card">План продаж — в голове, факт — непонятно где</div>
+        </div>
+    </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results">
+    <div class="container">
+        <h2 class="section-title">Реальные <span>результаты</span></h2>
+        <div class="pain-grid">
+            <div class="pain-card" style="text-align:center;">
+                <div style="font-size:2.2rem;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;">1 569</div>
+                <div style="font-size:0.95rem;">проблем найдено за 3 месяца по 159 товарам — стокауты, сливы рекламы, просадки плана</div>
+            </div>
+            <div class="pain-card" style="text-align:center;">
+                <div style="font-size:2.2rem;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;">17% &rarr; 10%</div>
+                <div style="font-size:0.95rem;">ДРР снижен за 3 месяца. При бюджете 1.2 млн&#8381;/мес — экономия 84к&#8381; ежемесячно</div>
+            </div>
+            <div class="pain-card" style="text-align:center;">
+                <div style="font-size:2.2rem;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;">9 467 &#8381;</div>
+                <div style="font-size:0.95rem;">за 1 заказ — рекламный слив пойман за сутки. Без мониторинга — 30-50к&#8381; потерь в месяц</div>
+            </div>
+            <div class="pain-card" style="text-align:center;">
+                <div style="font-size:2.2rem;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;">2 100+</div>
+                <div style="font-size:0.95rem;">SKU под управлением, 9 кабинетов, 7 600+ AI-планов за 10 месяцев</div>
+            </div>
         </div>
     </div>
 </section>
@@ -818,13 +843,28 @@
 <section id="screenshots">
     <div class="container">
         <h2 class="section-title">Как это <span>выглядит</span></h2>
-        <div class="screenshots-grid">
-            <!-- PLACEHOLDER: Заменить на реальный скриншот утреннего дашборда -->
-            <div class="screenshot-mock">Утренний дашборд</div>
-            <!-- PLACEHOLDER: Заменить на реальный скриншот Deep Scan алерта -->
-            <div class="screenshot-mock">Deep Scan алерт</div>
-            <!-- PLACEHOLDER: Заменить на реальный скриншот недельного итога -->
-            <div class="screenshot-mock">Недельный итог</div>
+        <p style="text-align:center;color:var(--text-muted);margin-top:-36px;margin-bottom:40px;font-size:0.95rem;">Реальные скриншоты из Telegram. Не макеты — рабочая система на 9 кабинетах.</p>
+        <div class="screenshots-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+            <div class="screenshot-mock" style="flex-direction:column;padding:0;max-height:none;">
+                <img src="screenshot-deepscan-overview.jpg" alt="Deep Scan — обзор здоровья бизнеса" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius);">
+                <div style="padding:12px 16px;font-size:0.82rem;color:var(--text-muted);text-align:center;">Deep Scan — здоровье бизнеса, 152 диагноза</div>
+            </div>
+            <div class="screenshot-mock" style="flex-direction:column;padding:0;max-height:none;">
+                <img src="screenshot-tasks.jpg" alt="Задачи менеджерам — СРОЧНО и ВАЖНО" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius);">
+                <div style="padding:12px 16px;font-size:0.82rem;color:var(--text-muted);text-align:center;">Задачи менеджерам с приоритетами</div>
+            </div>
+            <div class="screenshot-mock" style="flex-direction:column;padding:0;max-height:none;">
+                <img src="screenshot-drr-alert.jpg" alt="Алерты ДРР и стокаутов" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius);">
+                <div style="padding:12px 16px;font-size:0.82rem;color:var(--text-muted);text-align:center;">ДРР-алерты и рекомендации по ставкам</div>
+            </div>
+            <div class="screenshot-mock" style="flex-direction:column;padding:0;max-height:none;">
+                <img src="screenshot-stockout.jpg" alt="Стокаут-предиктор с суммами потерь" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius);">
+                <div style="padding:12px 16px;font-size:0.82rem;color:var(--text-muted);text-align:center;">Стокауты с суммами потерь в рублях</div>
+            </div>
+            <div class="screenshot-mock" style="flex-direction:column;padding:0;max-height:none;">
+                <img src="screenshot-dashboard.jpg" alt="Дашборд — темп к плану и реклама" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius);">
+                <div style="padding:12px 16px;font-size:0.82rem;color:var(--text-muted);text-align:center;">Дашборд: темп к плану + реклама</div>
+            </div>
         </div>
     </div>
 </section>
@@ -879,7 +919,7 @@
                 <a href="#telegram" class="btn-outline">Выбрать</a>
             </div>
         </div>
-        <p class="pricing-note">Дешевле штатного аналитика. Сканирует 24/7 без выходных.</p>
+        <p class="pricing-note">Дешевле штатного аналитика. Работает 24/7 без выходных и отпусков.</p>
     </div>
 </section>
 
@@ -912,14 +952,45 @@
     </div>
 </section>
 
+<!-- DIFFERENCE -->
+<section id="difference">
+    <div class="container">
+        <h2 class="section-title">Чем <span>отличается</span> от MPStats и Moneyplace</h2>
+        <div class="solution-grid">
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F50D;</span>
+                <h3>Они показывают данные</h3>
+                <p>Графики, таблицы, дашборды — надо заходить, смотреть, интерпретировать самому</p>
+            </div>
+            <div class="solution-card" style="border-color:rgba(79,110,247,0.4);">
+                <span class="solution-icon">&#x1F916;</span>
+                <h3>Торгскан говорит что делать</h3>
+                <p>Сам находит проблемы, объясняет причину и даёт конкретную рекомендацию — прямо в Telegram</p>
+            </div>
+            <div class="solution-card">
+                <span class="solution-icon">&#x1F4CA;</span>
+                <h3>Они считают выручку</h3>
+                <p>Без учёта налогов, разных ИП, рекламы и реальной логистики</p>
+            </div>
+            <div class="solution-card" style="border-color:rgba(79,110,247,0.4);">
+                <span class="solution-icon">&#x1F4B0;</span>
+                <h3>Торгскан считает прибыль</h3>
+                <p>P&L по каждому товару с учётом всех комиссий, рекламы, логистики и налогового режима каждого кабинета</p>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ABOUT -->
 <section id="about">
     <div class="container">
         <h2 class="section-title">Кто за <span>сканером</span></h2>
         <div class="about-wrap">
-            <!-- PLACEHOLDER: Заменить на реальное фото (тег <img>) -->
-            <div class="about-photo">Фото</div>
-            <p class="about-text">Управляю продажами на 6 кабинетах Wildberries и Ozon. Всю аналитику, которую продаю — использую сам каждый день. Не теоретик, а практик, который построил систему под реальные задачи.</p>
+            <div class="about-photo" style="flex-direction:column;gap:6px;font-size:1.6rem;font-weight:800;">
+                <span style="background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">9</span>
+                <span style="font-size:0.7rem;font-weight:500;color:var(--text-muted);">кабинетов</span>
+            </div>
+            <p class="about-text">Управляю продажами на 9 кабинетах Wildberries и Ozon — 2 100+ SKU, два проекта в разных нишах. За 10 месяцев система обработала 32 000+ продаж, сгенерировала 7 600+ AI-планов и нашла 1 500+ проблем. Всю аналитику, которую продаю — использую сам каждый день. Не теоретик, а практик.</p>
         </div>
     </div>
 </section>
@@ -930,24 +1001,28 @@
         <h2 class="section-title">Частые <span>вопросы</span></h2>
         <div class="faq-list">
             <div class="faq-item">
-                <button class="faq-question">Какие данные вам нужны для подключения?</button>
-                <div class="faq-answer"><p>API-ключи кабинетов WB и/или Ozon. Мы помогаем их получить.</p></div>
+                <button class="faq-question">Чем отличается от MPStats / Moneyplace?</button>
+                <div class="faq-answer"><p>MPStats и Moneyplace — инструменты внешней аналитики (ниши, конкуренты, SEO). Торгскан — внутренний ко-пилот: сам находит проблемы в ваших кабинетах, считает реальную прибыль и говорит что делать. Это разные продукты, они дополняют друг друга.</p></div>
             </div>
             <div class="faq-item">
-                <button class="faq-question">Это безопасно?</button>
-                <div class="faq-answer"><p>API-ключи дают доступ только к статистике, не к управлению. Данные хранятся на защищённом сервере.</p></div>
+                <button class="faq-question">Окупится ли за первый месяц?</button>
+                <div class="faq-answer"><p>На реальном примере: только оптимизация рекламы сэкономила 84к&#8381;/мес при бюджете 1.2 млн. Плюс предотвращённые стокауты и найденные убыточные товары. Окупаемость — обычно в первые 2 недели.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Какие данные вам нужны для подключения?</button>
+                <div class="faq-answer"><p>API-ключи кабинетов WB (тип «Статистика») и/или Ozon (Client ID + API Key). Доступ только к чтению данных — без возможности менять цены или карточки. Помогаем получить и настроить.</p></div>
             </div>
             <div class="faq-item">
                 <button class="faq-question">Сколько времени занимает подключение?</button>
-                <div class="faq-answer"><p>От 30 минут до 2 дней, в зависимости от количества кабинетов и настроек.</p></div>
+                <div class="faq-answer"><p>Аудит кабинета — 30 минут. Полная настройка системы — 1-2 дня, в зависимости от количества кабинетов.</p></div>
             </div>
             <div class="faq-item">
                 <button class="faq-question">Можно попробовать перед оплатой?</button>
-                <div class="faq-answer"><p>Да, первые 7 дней — бесплатный тестовый период.</p></div>
+                <div class="faq-answer"><p>Да. Начинаем с бесплатного аудита — подключаем ваш кабинет, запускаем сканер, показываем найденные проблемы с суммами. Если увидите ценность — подключаем полную систему.</p></div>
             </div>
             <div class="faq-item">
                 <button class="faq-question">Работаете только с WB и Ozon?</button>
-                <div class="faq-answer"><p>Основной фокус — WB и Ozon, но также делаю Telegram-ботов, автоматизацию таблиц и другие решения.</p></div>
+                <div class="faq-answer"><p>Основной фокус — WB и Ozon. Дополнительно делаю автоматизацию таблиц, Telegram-ботов и интеграции с 1С/МойСклад.</p></div>
             </div>
         </div>
     </div>
@@ -957,7 +1032,7 @@
 <footer id="contact">
     <div class="container">
         <!-- PLACEHOLDER: Заменить href на реальную ссылку Telegram (https://t.me/username) -->
-        <a href="#telegram" class="btn">Включить сканер</a>
+        <a href="#telegram" class="btn">Бесплатный аудит кабинета</a>
         <!-- PLACEHOLDER: Заменить email на реальный -->
         <p class="footer-email">Или напишите на email: <a href="mailto:placeholder@email.com">placeholder@email.com</a></p>
         <p class="footer-copy">&copy; 2026 Торгскан. Все права защищены.</p>
